@@ -3,7 +3,7 @@ module.exports = {
 	content: ["./index.html", "./src/**/*.{ts,tsx}"],
 	theme: {
 		screens: {
-			mobile: '430px',
+			mobile: "430px",
 			tablet: "768px",
 			laptop: "1024px",
 			desktop: "1440px",
@@ -27,8 +27,8 @@ module.exports = {
 				},
 			},
 			animation: {
-				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+				"accordion-down": "accordion-down 0.2s ease-out",
 			},
 		},
 	},
