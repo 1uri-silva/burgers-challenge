@@ -2,13 +2,13 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Item } from "./store-products-item";
 
-interface Modifier {
+export interface Modifier {
   id: number;
   name: string;
   price: number
 }
 
-type Product = {
+export interface Product {
   id: number;
   name: string;
   price: number;
@@ -64,6 +64,7 @@ export const cartProductSlice = createSlice({
           state.products[index].price * state.products[index].amountOrder +
           (state.products[index]?.modifiers?.price ?? 0);
       }
+
       state.total = state.products.reduce(
         (total, produto) => total + produto.total,
         0
@@ -90,20 +91,18 @@ export const cartProductSlice = createSlice({
     decrementAmountOderAction: (state, action: PayloadAction<{ id: number }>) => {
       const index = state.products.findIndex((p) => p.id === action.payload.id);
 
-      if (state.products[index].amountOrder === 1) return;
+      if (index === -1) {
+        return;
+      }
 
-      if (index !== -1) {
+      if (state.products[index].amountOrder > 1) {
         state.products[index].amountOrder--;
 
         state.products[index].total =
-          state.products[index].amountOrder * state.products[index].price + +
+          state.products[index].price * state.products[index].amountOrder +
           (state.products[index]?.modifiers?.price ?? 0);
+        state.total -= state.products[index].price;
       }
-
-      state.total = state.products.reduce(
-        (total, produto) => produto.total - total,
-        0
-      );
 
     },
   },
