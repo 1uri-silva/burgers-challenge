@@ -21,19 +21,13 @@ type ProductState = {
   total: number;
   item: Item | null;
   products: Product[];
-  tmp: { [key: number]: Product }
-  priceProduct: { [key: number]: number }
-  countTotalProduct: { [key: number]: number }
 };
 
 
 const initialState: ProductState = {
-  tmp: {},
   total: 0,
   item: null,
   products: [],
-  priceProduct: {},
-  countTotalProduct: {},
 };
 
 export const cartProductSelect = (state: RootState) => state.cart;
@@ -93,27 +87,26 @@ export const cartProductSlice = createSlice({
       );
     },
 
-
-
-
-
-
-
     decrementAmountOderAction: (state, action: PayloadAction<{ id: number }>) => {
-      // if (state.tmp[action.payload.id].amountOrder === 0) return;
+      const index = state.products.findIndex((p) => p.id === action.payload.id);
 
-      // state.tmp[action.payload.id].amountOrder--
-      // state.tmp[action.payload.id].total = state.tmp[action.payload.id].amountOrder * (state.item?.price ?? 0)
+      if (state.products[index].amountOrder === 1) return;
 
-      // state.total = Object.values(state.tmp).reduce((total, produto) => produto.total - total, 0)
+      if (index !== -1) {
+        state.products[index].amountOrder--;
+
+        state.products[index].total =
+          state.products[index].amountOrder * state.products[index].price + +
+          (state.products[index]?.modifiers?.price ?? 0);
+      }
+
+      state.total = state.products.reduce(
+        (total, produto) => produto.total - total,
+        0
+      );
 
     },
-
-
-
-
-  }
-
+  },
 })
 
 export const {
