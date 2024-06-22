@@ -1,87 +1,118 @@
+import { Fragment } from 'react'
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/button";
+import { ChooseItem } from "@/components/choose-item";
 import { Icon } from "@/components/icons";
-import { DialogClose, DialogContent } from "@/components/ui/dialog";
+import { IncreaseDecreaseButton } from "@/components/increase-decrease-button";
+import { DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+	addItemProductToCartAction,
+	cartProductSelect
+} from "@/redux/reducers/cart";
+
 
 export const Item: React.FC = () => {
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const carProducts = useAppSelector(cartProductSelect)
+
 	return (
-		<DialogContent className="max-mobile:h-screen overflow-y-auto pb-10 laptop:pb-6 laptop:h-[850px]">
-			<DialogClose asChild>
+		<DialogContent className="max-tablet:h-screen overflow-y-auto pb-10 laptop:pb-6 laptop:h-[850px]">
+			<DialogClose asChild >
 				<Icon
 					name="XCircleIcon"
 					className="absolute rounded-full top-10 right-4 z-50 size-7 bg-white text-[#4F372F]"
 				/>
 			</DialogClose>
-			<img
-				src="https://preodemo.gumlet.io/usr/venue/7602/section/646fbe4c64a6f.png"
-				alt="banner"
-				className="w-full h-[265px] object-cover"
-			/>
+			{carProducts.item?.images && carProducts.item.images.length > 0 ? (
+				<img
+					src={carProducts.item.images[0].image}
+					alt="banner"
+					className="w-full h-[265px] object-cover"
+				/>
+			) : (
+				<div className="w-full h-[265px]" />
+			)}
 			<div className="p-4">
 				<strong className="font-bold text-2xl text-[#121212]">
-					Smash Burger
+					{carProducts.item?.name || ''}
 				</strong>
 
 				<p className="font-normal text-[#464646]">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam odit
-					accusantium quod quaerat laborum deserunt hic provident sint, alias
-					minus, iusto possimus, dolor dolorem optio eligendi? Deleniti at quis
-					laborum!
+					{carProducts.item?.description || ''}
 				</p>
 			</div>
 
-			<div className="flex flex-col px-6 py-4 bg-blue-300">
-				<strong className="font-bold text-[#464646]">Chose your size</strong>
-				<span className="font-normal text-[#5F5F5F]">Select 1 option</span>
-			</div>
 
-			<div className="flex flex-row items-center justify-between px-6 py-4 bg-blue-400">
-				<div className="flex flex-col">
-					<strong className="font-bold text-[#464646]">1 meat</strong>
-					<span className="font-normal text-[#5F5F5F]">R$33,00</span>
-				</div>
-				<input
-					type="checkbox"
-					className="appearance-none rounded-full h-5 w-5 cursor-pointer border-4 border-[#5F5F5F] checked:bg-blue-500"
-				/>
-			</div>
-			<div className="flex flex-row items-center justify-between px-6 py-4">
-				<div className="flex flex-col">
-					<strong className="font-bold text-[#464646]">2 meat</strong>
-					<span className="font-normal text-[#5F5F5F]">R$35,00</span>
-				</div>
-				<input
-					type="checkbox"
-					className="appearance-none rounded-full h-5 w-5 cursor-pointer border-4 border-[#5F5F5F] checked:bg-blue-500"
-				/>
-			</div>
-			<div className="flex flex-row items-center justify-between px-6 py-4">
-				<div className="flex flex-col">
-					<strong className="font-bold text-[#464646]">3 meat</strong>
-					<span className="font-normal text-[#5F5F5F]">R$37,00</span>
-				</div>
-				<input
-					type="checkbox"
-					className="appearance-none rounded-full h-5 w-5 cursor-pointer border-4 border-[#5F5F5F] checked:bg-blue-500"
-				/>
-			</div>
+			{carProducts.item?.modifiers && (
+				<Fragment key={carProducts.item.id.toString()}>
+					<div className="flex flex-col px-6 py-4">
+						<strong className="font-bold text-[#464646]">Chose your size</strong>
+						<span className="font-normal text-[#5F5F5F]">Select 1 option</span>
+					</div>
+					{carProducts.item?.modifiers?.map(modifiers =>
+						<ChooseItem
+							key={modifiers.id.toString()}
+							items={modifiers.items}
+							mim={modifiers.minChoices}
+							max={modifiers.maxChoices}
+						/>
+					)}
+				</Fragment>
+			)}
 
 			<div className="px-6 mt-7 space-y-2">
-				<div className="flex flex-row w-full justify-center items-center gap-4">
-					<button type="button">
-						<Icon name="CircleMinusIcon" className="size-8" />
-					</button>
-					<span>3</span>
-					<button type="button">
-						<Icon name="CirclePlusIcon" className="size-8" />
-					</button>
-				</div>
+				{carProducts.item && (
+					<IncreaseDecreaseButton
+						countTotal={carProducts.products[carProducts.item.id]?.amountOrder || 1}
+						id={carProducts.item?.id}
+					/>
+				)}
 				<Button
-					title="Add to Order • $11.75"
-					onClick={() => navigate("/basket")}
+					className="laptop:hidden"
+					title={`Add to Order • 
+						$${carProducts.item?.id && carProducts.products[carProducts.item?.id]
+							? carProducts.products[carProducts.item?.id].price
+							: 0}
+					`}
+					onClick={() => {
+						if (carProducts.item) {
+							dispatch(addItemProductToCartAction({
+								id: carProducts.item.id,
+								name: carProducts.item.name,
+								price: carProducts.item.price,
+								amountOrder: 1,
+								total: carProducts.item.price,
+							}))
+						}
+						navigate("/basket")
+					}
+					}
 				/>
+				<DialogTrigger
+					className="max-laptop:hidden w-full"
+				>
+					<Button
+						title={`Add to Order • 
+						$${carProducts.item?.id && carProducts.products[carProducts.item?.id]
+								? carProducts.products[carProducts.item?.id].price
+								: 0}
+					`}
+						onClick={() => {
+							if (carProducts.item) {
+								dispatch(addItemProductToCartAction({
+									id: carProducts.item.id,
+									name: carProducts.item.name,
+									price: carProducts.item.price,
+									amountOrder: 1,
+									total: carProducts.item.price,
+								}))
+							}
+						}}
+					/>
+				</DialogTrigger>
 			</div>
 		</DialogContent>
 	);
