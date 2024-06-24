@@ -18,9 +18,10 @@ export const filterItemSlice = createSlice({
 		selectItemType: (state, action: PayloadAction<string>) => {
 			state.itemType = action.payload;
 		},
+
 	}
 });
 
 export const {
 	selectItemType,
-} = filterItemSlice.actions;
+	} = filterItemSlice.actions;
