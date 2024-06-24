@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { selectItemAction } from "@/redux/reducers/cart";
 import { Item } from "@/redux/reducers/store-products-item";
 import { Icon } from "./icons";
+import { Product } from "./product";
 import { DialogTrigger } from "./ui/dialog";
 
 
@@ -31,34 +32,20 @@ export const Section: React.FC<SectionProps> = ({ items, name }) => {
 				/>
 			</div>
 
-			<div className="overflow-hidden max-h-0 transition-all duration-500 peer-checked:max-h-full peer-checked:p-3">
+			<div className="overflow-hidden max-h-0 transition-all duration-500 bg-violet-500 peer-checked:max-h-full peer-checked:p-3">
 				{items.map((item) => (
-					<DialogTrigger key={item.id.toString()} asChild>
-						<button
-							type="button"
-							onClick={() => dispatch(selectItemAction(item))}
-							className="flex flex-row w-full space-y-4 justify-between"
-						>
-							<div className="h-20 w-32 text-left tablet:w-[550px] laptop:w-[400px] ">
-								<div className="w-4 h-4 flex items-center justify-center rounded-sm bg-[#4F372F]">
-									<span className="font-normal text-sm text-white">1</span>
-								</div>
-								<strong className="font-medium">{item.name}</strong>
-								<p className="font-light text-[#464646] whitespace-nowrap overflow-hidden text-ellipsis">
-									{item?.description}
-								</p>
-								<span>R${item.price}</span>
-							</div>
-							{
-								item.images && (
-									<img
-										src={item.images[0].image}
-										alt="launch"
-										className="w-32 h-20 rounded-md"
-									/>
-								)
-							}
-						</button>
+					<DialogTrigger
+						data-testid='trigger'
+						key={item.id.toString()}
+						onClick={() => dispatch(selectItemAction(item))}
+						className="w-full"
+					>
+						<Product 
+							name={item.name}
+							price={item.price}
+							images={item.images}
+							description={item.description}
+						/>
 					</DialogTrigger>
 				))}
 			</div>

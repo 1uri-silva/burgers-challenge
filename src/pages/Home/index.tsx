@@ -11,6 +11,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Item } from "../Item";
 
 import { Cart } from "@/components/cart";
+import { Loading } from "@/components/loading";
 import { fetchProduct, fetchRestaurant } from "@/lib/api/mock-api";
 import { cartProductSelect } from "@/redux/reducers/cart";
 import {
@@ -49,9 +50,9 @@ export function Home() {
 
 
 	if (restaurantStorage.loading) {
-		return <h1>Loading</h1>
-	}
+		return <Loading />
 
+	}
 	return (
 		<>
 			<MenuBar
@@ -72,9 +73,9 @@ export function Home() {
 							<div className="flex flex-row pt-5 pb-6 overflow-x-auto w-screen laptop:w-full">
 								{productStorage.products?.sections.map((value) => (
 									<Carousel
-										key={value.id.toString()}
 										name={value.name}
 										image_url={value.images}
+										key={value.id.toString()}
 										selectedName={(item) => dispatch(selectItemType(item))}
 										borderColor={restaurantStorage.restaurant?.webSettings.primaryColour}
 									/>
@@ -84,6 +85,7 @@ export function Home() {
 							<Dialog>
 								{productStorage.products?.sections.map((values) => (
 									<Section
+										key={values.id.toString()}
 										name={values.name}
 										items={values.items}
 									/>
@@ -96,7 +98,10 @@ export function Home() {
 								<a href="/" className="text-[#4F372F] font-bold underline">
 									View allergy information
 								</a>
-								<Button title={`Your basket • ${itemSelect.products.length} item`} onClick={() => navigate('/basket')} />
+								<Button
+									title={`Your basket • ${itemSelect.products.length} item`}
+									onClick={() => navigate('/basket')}
+								/>
 							</div>
 						</div>
 

@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useCallback, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/button";
@@ -8,15 +8,58 @@ import { IncreaseDecreaseButton } from "@/components/increase-decrease-button";
 import { DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
+	Modifier,
 	addItemProductToCartAction,
-	cartProductSelect
+	addModifierAction,
+	cartProductSelect,
+	decrementAmountOderAction,
+	incrementAmountOderAction,
 } from "@/redux/reducers/cart";
 
 
 export const Item: React.FC = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+
 	const carProducts = useAppSelector(cartProductSelect)
+	const [modifier, setModifier] = useState<Modifier>()
+	const [quantity, setQuantity] = useState<number>(1)
+
+	const addQuantityProduct = useCallback((amount: number) => {
+		setQuantity(amount)
+		if (carProducts.item) {
+			dispatch(incrementAmountOderAction({
+				count: amount,
+				id: carProducts.item.id
+			}))
+		}
+	}, [dispatch, carProducts])
+
+	const decreaseQuantityProduct = useCallback((amount: number) => {
+		setQuantity(amount)
+		if (carProducts.item) {
+			dispatch(decrementAmountOderAction({
+				count: amount,
+				id: carProducts.item.id
+			}))
+		}
+	}, [dispatch, carProducts])
+
+
+	const addItemToCar = useCallback(() => {
+		dispatch(addModifierAction({
+			items: modifier,
+			id: carProducts.item?.id,
+		}))
+
+		if (carProducts.item) {
+			dispatch(addItemProductToCartAction(carProducts.item.id))
+		}
+
+		setQuantity(1)
+		setModifier(undefined)
+
+	}, [dispatch, carProducts, modifier])
 
 	return (
 		<DialogContent className="max-tablet:h-screen overflow-y-auto pb-10 laptop:pb-6 laptop:h-[850px]">
@@ -54,10 +97,11 @@ export const Item: React.FC = () => {
 					</div>
 					{carProducts.item?.modifiers?.map(modifiers =>
 						<ChooseItem
-							key={modifiers.id.toString()}
 							items={modifiers.items}
 							mim={modifiers.minChoices}
 							max={modifiers.maxChoices}
+							key={modifiers.id.toString()}
+							selectModifier={(item) => setModifier(item)}
 						/>
 					)}
 				</Fragment>
@@ -66,54 +110,30 @@ export const Item: React.FC = () => {
 			<div className="px-6 mt-7 space-y-2">
 				{carProducts.item && (
 					<IncreaseDecreaseButton
-						countTotal={carProducts.products[carProducts.item.id]?.amountOrder || 1}
-						id={carProducts.item?.id}
+						countTotal={quantity}
+						increase={(amount) => addQuantityProduct(amount)}
+						decrease={(amount) => decreaseQuantityProduct(amount)}
 					/>
 				)}
-				<Button
-					className="laptop:hidden"
-					title={`Add to Order • 
-						$${carProducts.item?.id && carProducts.products[carProducts.item?.id]
-							? carProducts.products[carProducts.item?.id].price
-							: 0}
-					`}
-					onClick={() => {
-						if (carProducts.item) {
-							dispatch(addItemProductToCartAction({
-								id: carProducts.item.id,
-								name: carProducts.item.name,
-								price: carProducts.item.price,
-								amountOrder: 1,
-								total: carProducts.item.price,
-							}))
-						}
-						navigate("/basket")
-					}
-					}
-				/>
-				<DialogTrigger
-					className="max-laptop:hidden w-full"
-				>
-					<Button
-						title={`Add to Order • 
-						$${carProducts.item?.id && carProducts.products[carProducts.item?.id]
-								? carProducts.products[carProducts.item?.id].price
-								: 0}
-					`}
-						onClick={() => {
-							if (carProducts.item) {
-								dispatch(addItemProductToCartAction({
-									id: carProducts.item.id,
-									name: carProducts.item.name,
-									price: carProducts.item.price,
-									amountOrder: 1,
-									total: carProducts.item.price,
-								}))
-							}
-						}}
-					/>
-				</DialogTrigger>
 			</div>
-		</DialogContent>
+
+
+			<Button
+				className="laptop:hidden"
+				title={`Add to Order • $${carProducts.item?.price}`}
+				onClick={() => {
+					addItemToCar();
+					navigate("/basket")
+				}}
+			/>
+			<DialogTrigger
+				className="max-laptop:hidden w-full"
+			>
+				<Button
+					title={`Add to Order • $${carProducts.item?.price}`}
+					onClick={addItemToCar}
+				/>
+			</DialogTrigger>
+		</DialogContent >
 	);
 };

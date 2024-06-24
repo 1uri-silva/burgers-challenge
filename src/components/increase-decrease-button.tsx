@@ -1,32 +1,33 @@
-import { useAppDispatch } from "@/redux/hooks"
-import { decrementAmountOderAction, incrementAmountOderAction } from "@/redux/reducers/cart"
 import { Icon } from "./icons"
 
 type IncreaseDecreaseButton = {
-  id: number
   countTotal: number
+  increase(quantity: number): void
+  decrease(quantity: number): void
 }
 
 export const IncreaseDecreaseButton: React.FC<IncreaseDecreaseButton> = ({
-  id,
+  decrease,
+  increase,
   countTotal,
 }) => {
-  const dispatch = useAppDispatch()
-  console.log({
-    id,
-    countTotal,
-  })
+
   return (
-    <div className="flex flex-row w-full justify-center items-center gap-4">
-      <button type="button" onClick={() => {
-        dispatch(decrementAmountOderAction({ id }))
-      }}>
+    <div
+      data-testid="container-increase-decrease"
+      className="flex flex-row w-full justify-center items-center gap-4"
+    >
+      <button
+        type="button"
+        onClick={() => decrease(countTotal - 1)}
+      >
         <Icon name="CircleMinusIcon" className="size-8" />
       </button>
-      <span>{countTotal || 1}</span>
-      <button type="button" onClick={() => {
-        dispatch(incrementAmountOderAction({ id }))
-      }}>
+      <span data-testid="amount-total">{countTotal}</span>
+      <button
+        type="button"
+        onClick={() => increase(countTotal + 1)}
+      >
         <Icon name="CirclePlusIcon" className="size-8" />
       </button>
     </div>
