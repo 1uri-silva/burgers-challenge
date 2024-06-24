@@ -5,13 +5,13 @@ const config: Config = {
 	testEnvironment: "jest-environment-jsdom",
 	moduleDirectories: ['node_modules', '<rootDir>/'],
 	setupFilesAfterEnv: ["@testing-library/jest-dom"],
-	testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(test).ts?(x)"],
+	testMatch: ["**/?(*.)+(test|spec).ts?(x)"],
 	transform: {
-			"^.+\\.(js|ts)$": "ts-jest",
+		"^.+\\.(js|ts)$": "ts-jest",
 	},
 	moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1"
-  },
+		"^@/(.*)$": "<rootDir>/src/$1"
+	},
 };
 
 export default config;
