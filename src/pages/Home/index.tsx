@@ -95,7 +95,11 @@ export function Home() {
 
 
 							<div className="tablet:hidden w-screen flex flex-col text-center justify-center p-6">
-								<a href="/" className="text-[#4F372F] font-bold underline">
+								<a
+									href="/"
+									className="text-[#4F372F] font-bold underline"
+									style={{ color: restaurantStorage.restaurant?.webSettings.primaryColour }}
+								>
 									View allergy information
 								</a>
 								<Button

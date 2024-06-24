@@ -13,7 +13,7 @@ const navigate = useNavigate()
 				<Icon name="XIcon" className="text-transparent size-4" />
 			</header>
 			<Cart />
-			<div className="absolute flex w-full bottom-6 p-4 tablet:hidden">
+			<div className="absolute flex w-full bottom-6 p-4">
         <Button title="Checkout now" onClick={()=> navigate('/')}/>
       </div>
 		</>

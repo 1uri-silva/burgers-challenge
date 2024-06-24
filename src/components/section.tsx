@@ -1,5 +1,5 @@
-import { useAppDispatch } from "@/redux/hooks";
-import { selectItemAction } from "@/redux/reducers/cart";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { cartProductSelect, selectItemAction } from "@/redux/reducers/cart";
 import { Item } from "@/redux/reducers/store-products-item";
 import { Icon } from "./icons";
 import { Product } from "./product";
@@ -13,6 +13,8 @@ type SectionProps = {
 
 export const Section: React.FC<SectionProps> = ({ items, name }) => {
 	const dispatch = useAppDispatch()
+	const car = useAppSelector(cartProductSelect)
+	
 	return (
 		<div className="w-full relative overflow-hidden pb-3">
 
@@ -32,7 +34,7 @@ export const Section: React.FC<SectionProps> = ({ items, name }) => {
 				/>
 			</div>
 
-			<div className="overflow-hidden max-h-0 transition-all duration-500 bg-violet-500 peer-checked:max-h-full peer-checked:p-3">
+			<div className="overflow-hidden max-h-0 transition-all duration-500 peer-checked:max-h-full peer-checked:p-3">
 				{items.map((item) => (
 					<DialogTrigger
 						data-testid='trigger'
@@ -40,14 +42,16 @@ export const Section: React.FC<SectionProps> = ({ items, name }) => {
 						onClick={() => dispatch(selectItemAction(item))}
 						className="w-full"
 					>
-						<Product 
+						<Product
 							name={item.name}
 							price={item.price}
 							images={item.images}
 							description={item.description}
+							amount={car.products.find(value => value.id ===item.id)?.amountOrder}
 						/>
 					</DialogTrigger>
-				))}
+				)
+				)}
 			</div>
 		</div >
 	);

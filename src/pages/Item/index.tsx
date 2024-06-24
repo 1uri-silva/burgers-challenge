@@ -22,6 +22,8 @@ export const Item: React.FC = () => {
 	const dispatch = useAppDispatch();
 
 	const carProducts = useAppSelector(cartProductSelect)
+
+
 	const [modifier, setModifier] = useState<Modifier>()
 	const [quantity, setQuantity] = useState<number>(1)
 
@@ -130,7 +132,8 @@ export const Item: React.FC = () => {
 				className="max-laptop:hidden w-full"
 			>
 				<Button
-					title={`Add to Order • $${carProducts.item?.price}`}
+					title={`
+						Add to Order • $${carProducts.item?.price}`}
 					onClick={addItemToCar}
 				/>
 			</DialogTrigger>
