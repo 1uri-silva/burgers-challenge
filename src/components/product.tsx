@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/utils/format-currency";
 import { useAppSelector } from "@/redux/hooks";
 import { Image } from "@/redux/reducers/store-products-item";
 import { storageRestaurant } from "@/redux/reducers/store-restaurant";
@@ -39,7 +40,7 @@ export const Product: React.FC<ProductProps> = ({
         <p className="font-light text-[#464646] whitespace-nowrap overflow-hidden text-ellipsis">
           {description}
         </p>
-        <span>R${price}</span>
+        <span>R${formatCurrency(price)}</span>
       </div>
       {
         images && (

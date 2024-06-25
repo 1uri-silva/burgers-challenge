@@ -6,6 +6,7 @@ import { ChooseItem } from "@/components/choose-item";
 import { Icon } from "@/components/icons";
 import { IncreaseDecreaseButton } from "@/components/increase-decrease-button";
 import { DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { formatCurrency } from '@/lib/utils/format-currency';
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
 	Modifier,
@@ -122,7 +123,7 @@ export const Item: React.FC = () => {
 
 			<Button
 				className="laptop:hidden"
-				title={`Add to Order • $${carProducts.item?.price}`}
+				title={`Add to Order • $${formatCurrency(carProducts.item?.price)}`}
 				onClick={() => {
 					addItemToCar();
 					navigate("/basket")
@@ -133,7 +134,7 @@ export const Item: React.FC = () => {
 			>
 				<Button
 					title={`
-						Add to Order • $${carProducts.item?.price}`}
+						Add to Order • $${formatCurrency(carProducts.item?.price)}`}
 					onClick={addItemToCar}
 				/>
 			</DialogTrigger>
