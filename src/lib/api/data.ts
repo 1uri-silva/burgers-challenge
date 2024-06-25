@@ -81,7 +81,7 @@ export const sections=  [
         description:
           "100g pressed hamburger, mozzarella cheese, pickles, red onion, grilled bacon and traditional Heinz mayonnaise.",
         alcoholic: 0,
-        price: 10.0,
+        price: 0.00,
         position: 1000,
         visible: 1,
         availabilityType: "AVAILABLE_NOW",

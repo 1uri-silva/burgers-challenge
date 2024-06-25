@@ -109,7 +109,10 @@ export function Home() {
 							</div>
 						</div>
 
-						<div className="w-80 h-96 hidden laptop:flex laptop:shadow-md">
+						<div className="flex-col w-80 h-[400px] hidden laptop:flex laptop:shadow-md overflow-hidden">
+							<div className="h-16 px-4 py-[18px] flex flex-row items-center bg-white border-b border-[#DADADA] tablet:">
+								<h1 className="text-black text-start font-medium text-2xl">Carrinho</h1>
+							</div>
 							<Cart />
 						</div>
 					</div>

@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/utils/format-currency";
 import { useAppDispatch } from "@/redux/hooks"
 import { Modifier, decrementAmountOderAction, incrementAmountOderAction } from "@/redux/reducers/cart"
 import { IncreaseDecreaseButton } from "./increase-decrease-button"
@@ -30,7 +31,7 @@ export const ProductCart: React.FC<ProductCartProps> = ({
         <strong className="text-[#121212]">{name}</strong>
         {modifiers && (
           <span className="text-[#5F5F5F]">
-            {modifiers?.name} (+${modifiers?.price})
+            {modifiers?.name} (+${formatCurrency(modifiers?.price)})
           </span>
         )}
         <IncreaseDecreaseButton
@@ -45,7 +46,7 @@ export const ProductCart: React.FC<ProductCartProps> = ({
           countTotal={amountOrder}
         />
       </div>
-      <span className="text-[#121212]">R${total}</span>
+      <span className="text-[#121212]">R${formatCurrency(total)}</span>
     </div>
   )
 }
